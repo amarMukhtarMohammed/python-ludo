@@ -2,12 +2,12 @@ This project is a Ludo game implemented in Python, focusing solely on the proced
 
 Below is my initial high-level design plan:
 
-- Choose to start or continue a game
-- Add human or computer players (min 2 pl)
-- Display players with assigned colours
-- Save and quit options
-- Display game board
-- Random dice roll generator
+- ~Choose to start or continue a game~
+- ~Add human or computer players (min 2 pl)~
+- ~Display players with assigned colours~
+- ~Save and quit options~
+- ~Display game board~
+- ~Random dice roll generator~
 - Player exits base after the first roll of 6
 - Players move around the board
 - Players can eliminate others
