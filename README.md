@@ -9,6 +9,15 @@ Below is my initial high-level design plan:
 - ~Display game board~
 - ~Random dice roll generator~
 - Player exits base after the first roll of 6
+    - ~Print board to console~
+        - ~Get Player coordinates~ 
+        - ~Update board using player coordinates~
+    - ~User rolls dice - press enter to roll~
+        - Update player coordinates
+    - Print board to console
+        - Get player coordinates
+        - Update board using player coordinates
+
 - Players move around the board
 - Players can eliminate others
 - Players can reach home
