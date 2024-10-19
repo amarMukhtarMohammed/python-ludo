@@ -24,3 +24,10 @@ Below is my initial high-level design plan:
 - The game ends when all players are home
 
 I plan to expand on each component in greater detail before implementation, with the goal of finding the most optimal solution.
+
+
+//print board
+    //get player coordinates
+//roll dice
+    //remove player old position
+    //update player new position

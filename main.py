@@ -36,47 +36,9 @@ def displayPlayers():
     colors = ["RED", "BLUE", "GREEN", "YELLOW"]
     for i in range(len(players)):
         print("PLAYER {} - {} - {}".format(i, playerOrComputer(i), colors[i]))    
-  
-def displayBoard():
-    board = [
-        "###########################################################################################",
-        "#                                   #     |     |     # |                                 #",
-        "#            YELLOW                 #-----#-----#-----# V              BLUE               #",
-        "#                                   #     #     #     #                                   #",
-        "#          -----------              #-----#-----#-----#             -----------           #",
-        "#          | Y1 | Y2 |              #     #     #     #             | B1 | B2 |           #",
-        "#          -----------              #-----#-----#-----#             -----------           #",
-        "#          | Y3 | Y4 |              #     #     #     #             | B3 | B4 |           #",
-        "#          -----------              #-----#-----#-----#             -----------           #",
-        "#                                   #     #     #     #                                   #",
-        "#                                   #-----#-----#-----#                                   #",
-        "# -->                               #     #     #     #                                   #",
-        "#####################################-----#-----#-----#####################################",
-        "#     |     |     |     |     |     |     #     #     |     |     |     |     |     |     #",
-        "#-----#####################################-----#####################################-----#",
-        "#     |     |     |     |     |     |     |  X  |     |     |     |     |     |     |     #",
-        "#-----#####################################-----#####################################-----#",
-        "#     |     |     |     |     |     |     #     #     |     |     |     |     |     |     #",
-        "#####################################-----#-----#-----#####################################",
-        "#                                   #     #     #     #                               <-- #",
-        "#             GREEN                 #-----#-----#-----#                RED                #",
-        "#                                   #     #     #     #                                   #",
-        "#          -----------              #-----#-----#-----#             -----------           #",
-        "#          | G1 | G2 |              #     #     #     #             | R1 | R2 |           #",
-        "#          -----------              #-----#-----#-----#             -----------           #",
-        "#          | G3 | G4 |              #     #     #     #             | R3 | R4 |           #",
-        "#          -----------              #-----#-----#-----#             -----------           #",
-        "#                                   #     #     #     #                                   #",
-        "#                                 ^ #-----#-----#-----#                                   #",
-        "#                                 | #     |     |     #                                   #",
-        "###########################################################################################"
-        ]
-
-    for row in board:
-        print("".join(row))
 
 player_positions = {
-    "B1": [4, 71, 0],  
+    "B1": [4, 71, 0],
     "B2": [4, 76, 0],
     "B3": [6, 71, 0],
     "B4": [6, 76, 0],
@@ -128,8 +90,8 @@ board_dictionary = {
 
 coordinates = [
     (0, 52), (2, 52), (4, 51), (6, 52), (8, 52), (10, 52), (12, 52), 
-    (12, 58), (12, 64), (12, 70), (12, 74), (12, 78), (12, 82), 
-    (12, 86), (13, 86), (14, 86), (16, 86), (16, 82), (16, 78), 
+    (12, 58), (12, 64), (12, 70), (12, 76), (12, 82),  
+     (12, 88), (14, 86), (16, 86), (16, 80), 
     (16, 74), (16, 70), (16, 64), (16, 58), (16, 52), (18, 52), 
     (20, 52), (22, 52), (24, 52), (26, 52), (28, 52), (28, 46), 
     (28, 40), (26, 40), (24, 40), (22, 40), (20, 40), (18, 40), 
@@ -200,31 +162,39 @@ def rollDice():
         else:
             roll = random.randint(1, 6)
             setPlayerPositions(roll)
-            #print(player_positions)
             printDictionary()
+            #print(player_positions)
             for line in ludo_dictionary[roll]:
                 print(line)
 
 def getPlayerPositions(playerID):
     return player_positions[playerID]
 
+def removePlayerOldPosition(player):
+    dictionaryIndex = getPlayerPositions(player)
+    original_value = board_dictionary[str(dictionaryIndex[0])]
+    new_value = original_value.replace('B1', '  ')
+    board_dictionary[str(dictionaryIndex[0])] = new_value
+
 def setPlayerPositions(roll):
     if player_positions["B1"][2] == 1:
+        removePlayerOldPosition("B1")
         player_positions["B1"] = list(getTuplePosition(player_positions["B1"][:2], roll)) + [1]
     if roll == 6 and player_positions["B1"][2] == 0:
+        removePlayerOldPosition("B1")
         player_positions["B1"] = [0, 52, 1]
 
 def getTuplePosition(target_tuple, roll):
+    print(target_tuple)
+    print(roll)
     currentPosition = coordinates.index(tuple(target_tuple))
     return coordinates[currentPosition + roll]
 
 def updateDictionary(playerID, playerPosition):
-    print(playerPosition)
-    # dictionaryIndex = str(playerPosition[0])
-    # indexPosition = playerPosition[1]
-    # original_value = board_dictionary[dictionaryIndex]
-    # board_dictionary[dictionaryIndex] = original_value[:max(0, indexPosition - 1)] + playerID + original_value[min(len(original_value), indexPosition + 1):]
-    #print(player_positions["B1"])
+    dictionaryIndex = str(playerPosition[0])
+    indexPosition = playerPosition[1]
+    original_value = board_dictionary[dictionaryIndex]
+    board_dictionary[dictionaryIndex] = original_value[:max(0, indexPosition - 1)] + playerID + original_value[min(len(original_value), indexPosition + 1):]
 
 # def updateDictionary(playerID, playerPosition):
 #     # Get player's previous position (current position in the dictionary)
@@ -251,46 +221,22 @@ def updateDictionary(playerID, playerPosition):
 
 #     # Print the updated positions to check
 #     print(f"Updated {playerID} position to: {playerPosition}")
-    
-
-
-
-def displayCoordinates():
-    print(coordinates[5][5])
-
-    # # Function to iterate through coordinates and return each one
-    # def get_coordinates_iteratively(coords):
-    #     for index, coord in enumerate(coords):
-    #         yield index, coord  # Yielding the index and coordinate
-
-#     # Usage
-#     for index, coord in get_coordinates_iteratively(coordinates):
-#         print(f"Coordinate {index}: {coord}")
-
-
-# # Print the updated board
-# for row in board_dictionary.values():
-#     print(row)
 
 def main():
     try:
         #startLudo()
         #rollDice()
         #displayBoard()
-
-        printDictionary()
         rollDice()
-        #displayCoordinates()
-        #updateDictionary("B1", "12", 46)
-        #printDictionary()
+        
     except IndexError as e:
         print("An error occurred: Index out of bounds.", e)
     except KeyError as e:
         print("An error occurred: Invalid dictionary index.", e)
         
     except KeyboardInterrupt:
-        confirmation = input("\n**********CONFIRM YOU WOULD LIKE TO QUIT (yes/no)**********\n")
-        if confirmation == 'yes':
+        confirmation = input("\n**********CONFIRM YOU WOULD LIKE TO QUIT (y/n)**********\n")
+        if confirmation == 'y':
             print("**********EXITING THE GAME**********")
         else:
             print("**********RESUMING THE GAME**********")
