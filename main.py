@@ -160,33 +160,107 @@ def rollDice():
             print("Exiting the loop.")
             break
         else:
-            roll = random.randint(1, 6)
-            setPlayerPositions(roll)
-            printDictionary()
-            #print(player_positions)
+            roll = random.randint(5, 6)
             for line in ludo_dictionary[roll]:
                 print(line)
+            setPlayerPositions(roll)
+            printDictionary()
 
 def getPlayerPositions(playerID):
     return player_positions[playerID]
 
+def getKeysStartingWith(char):
+    return [key for key in player_positions if key.startswith(char)]
+
+def getAvailablePieces(player):
+    availablePlayers = []
+    for inSpawnPlayer in player_positions:
+        if player_positions[player][2] == 1 and inSpawnPlayer.startswith(player):
+            availablePlayers.append(inSpawnPlayer)
+    return availablePlayers
+
 def removePlayerOldPosition(player):
     dictionaryIndex = getPlayerPositions(player)
     original_value = board_dictionary[str(dictionaryIndex[0])]
-    new_value = original_value.replace('B1', '  ')
+    new_value = original_value.replace(player, '  ')
     board_dictionary[str(dictionaryIndex[0])] = new_value
 
 def setPlayerPositions(roll):
-    if player_positions["B1"][2] == 1:
-        removePlayerOldPosition("B1")
-        player_positions["B1"] = list(getTuplePosition(player_positions["B1"][:2], roll)) + [1]
-    if roll == 6 and player_positions["B1"][2] == 0:
-        removePlayerOldPosition("B1")
-        player_positions["B1"] = [0, 52, 1]
+    piece = 'B1'
+    availablePiece = getAvailablePieces(piece)
+    if roll == 6:
+        if len(availablePiece) == 0:
+            removePlayerOldPosition(piece)
+            player_positions[piece] = [0, 52, 1]
+        elif len(availablePiece) == 1:
+            removePlayerOldPosition(availablePiece[0])
+            player_positions[availablePiece[0]] = list(getTuplePosition(player_positions[availablePiece[0]][:2], roll)) + [1]
+        else:
+            print("Available to move: " + getKeysStartingWith(piece[0])[0])
+            availableToMoveChoice = input("Select an available player to move: ")
+            removePlayerOldPosition(availableToMoveChoice)
+            player_positions[availableToMoveChoice] = list(getTuplePosition(player_positions[availableToMoveChoice][:2], roll)) + [1]
+    else:
+        if len(availablePiece) == 1:
+            removePlayerOldPosition(availablePiece[0])
+            player_positions[availablePiece[0]] = list(getTuplePosition(player_positions[availablePiece[0]][:2], roll)) + [1]
+        else:
+            print("Available to move: " + ', '.join(availablePiece))
+            availableToMoveChoice = input("Select an available player to move: ")
+            removePlayerOldPosition(availableToMoveChoice)
+            player_positions[availableToMoveChoice] = list(getTuplePosition(player_positions[availableToMoveChoice][:2], roll)) + [1]
+
+
+
+
+            
+    # print("world")
+    # ######
+
+    # player_count = sum(1 for inSpawnPlayer in player_positions if inSpawnPlayer.startswith('B') and player_positions[inSpawnPlayer][2] == 1)
+    # available_players = []
+    
+    # for inSpawnPlayer in player_positions:
+    #     if inSpawnPlayer.startswith('B') and player_positions[inSpawnPlayer][2] == 1:
+    #         if player_count > 1:
+    #             available_players.append(inSpawnPlayer)
+    
+    # # Print available players on one line if there are more than one
+    # if available_players:
+    #     print("Available to move: " + ', '.join(available_players))
+    #     availableToMoveChoice = input("Select an available player to move: ")
+    #     removePlayerOldPosition(availableToMoveChoice)
+    #     player_positions[availableToMoveChoice] = list(getTuplePosition(player_positions[availableToMoveChoice][:2], roll)) + [1]
+    #     printDictionary()
+    # else:
+    #     for inSpawnPlayer in player_positions:
+    #         if inSpawnPlayer.startswith('B') and player_positions[inSpawnPlayer][2] == 1:
+    #             removePlayerOldPosition(inSpawnPlayer)
+    #             player_positions[inSpawnPlayer] = list(getTuplePosition(player_positions[inSpawnPlayer][:2], roll)) + [1]
+
+    # # Check if any 'B' players are out and roll is 6
+    # for inSpawnPlayer in player_positions:
+    #     if inSpawnPlayer.startswith('B') and player_positions[inSpawnPlayer][2] == 0 and roll == 6:
+    #         if player_count > 1:
+    #             print("Available to move: " + ', '.join(available_players))
+    #             availableToMoveChoice = input("Select an available player to move: ")
+    #             removePlayerOldPosition(availableToMoveChoice)
+    #             player_positions[availableToMoveChoice] = list(getTuplePosition(player_positions[availableToMoveChoice][:2], roll)) + [1]
+    #             printDictionary()
+    #             break
+    #         else:
+    #             #print(player_positions[inSpawnPlayer])
+    #             removePlayerOldPosition(inSpawnPlayer)
+    #             player_positions[inSpawnPlayer] = [0, 52, 1]
+    #             break
+
+
+
+    # if roll == 6 and player_positions["B1"][2] == 0:
+    #     removePlayerOldPosition("B1")
+    #     player_positions["B1"] = [0, 52, 1]
 
 def getTuplePosition(target_tuple, roll):
-    print(target_tuple)
-    print(roll)
     currentPosition = coordinates.index(tuple(target_tuple))
     return coordinates[currentPosition + roll]
 
@@ -227,6 +301,7 @@ def main():
         #startLudo()
         #rollDice()
         #displayBoard()
+        printDictionary()
         rollDice()
         
     except IndexError as e:
