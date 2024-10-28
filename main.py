@@ -172,12 +172,40 @@ def getPlayerPositions(playerID):
 def getKeysStartingWith(char):
     return [key for key in player_positions if key.startswith(char)]
 
-def getAvailablePieces(player):
+def getAvailablePiece(player):
     availablePlayers = []
     for inSpawnPlayer in player_positions:
         if player_positions[player][2] == 1 and inSpawnPlayer.startswith(player):
             availablePlayers.append(inSpawnPlayer)
     return availablePlayers
+
+def getAvailablePieceByChar(playerChar):
+    allAvailablePiecesList = []
+    keys_list = list(player_positions.keys())
+    for key in keys_list:
+        if key.startswith(playerChar) and player_positions[key][2] == 1:
+            allAvailablePiecesList.append(key)
+    return allAvailablePiecesList
+
+def getAvailablePieceAndNext(playerChar):
+    last_key = None
+    playing_characters = []
+    keys_list = list(player_positions.keys())
+
+    for key in keys_list:
+        if key.startswith(playerChar) and player_positions[key][2] == 1:
+            playing_characters.append(key)
+            last_key = key
+
+    if last_key:
+        last_key_index = keys_list.index(last_key)
+        for i in range(last_key_index + 1, len(keys_list)):
+            next_key = keys_list[i]
+            if next_key.startswith(playerChar):
+                playing_characters.append(next_key)
+                break 
+
+    return(playing_characters)
 
 def removePlayerOldPosition(player):
     dictionaryIndex = getPlayerPositions(player)
@@ -185,21 +213,23 @@ def removePlayerOldPosition(player):
     new_value = original_value.replace(player, '  ')
     board_dictionary[str(dictionaryIndex[0])] = new_value
 
-def setPlayerPositions(roll):
+def setPlayerPositions(roll): #Exclusive to blue at the moment
     piece = 'B1'
-    availablePiece = getAvailablePieces(piece)
+    availablePiece = getAvailablePieceByChar(piece[0])
+    print("Available Pieces: " , availablePiece)
     if roll == 6:
         if len(availablePiece) == 0:
             removePlayerOldPosition(piece)
             player_positions[piece] = [0, 52, 1]
-        elif len(availablePiece) == 1:
-            removePlayerOldPosition(availablePiece[0])
-            player_positions[availablePiece[0]] = list(getTuplePosition(player_positions[availablePiece[0]][:2], roll)) + [1]
         else:
-            print("Available to move: " + getKeysStartingWith(piece[0])[0])
+            print("Available to move: ", getAvailablePieceAndNext('B'))
             availableToMoveChoice = input("Select an available player to move: ")
-            removePlayerOldPosition(availableToMoveChoice)
-            player_positions[availableToMoveChoice] = list(getTuplePosition(player_positions[availableToMoveChoice][:2], roll)) + [1]
+            if availableToMoveChoice == getAvailablePieceAndNext('B')[-1] and player_positions[availableToMoveChoice][2] == 0:
+                removePlayerOldPosition(availableToMoveChoice)
+                player_positions[availableToMoveChoice] = [0, 52, 1]
+            else:
+                removePlayerOldPosition(availableToMoveChoice)
+                player_positions[availableToMoveChoice] = list(getTuplePosition(player_positions[availableToMoveChoice][:2], roll)) + [1]
     else:
         if len(availablePiece) == 1:
             removePlayerOldPosition(availablePiece[0])

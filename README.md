@@ -28,6 +28,9 @@ Below is my initial high-level design plan:
     - ~(2) One or more players on board~
         - ~Prompt to move a 'playing' player~
 - Add multiple pieces
+    - ~Handle multiple pieces to spawn~
+    - Handle multiple people on 1 tile
+- Add priority dictionary
 - Add multiple players
 - Players can reach home
 - The game ends when all players are home
