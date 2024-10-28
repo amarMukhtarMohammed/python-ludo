@@ -16,7 +16,7 @@ def setNumberOfPlayers():
     print("\n**********SELECT NUMBER OF PLAYERS (2-4)**********")
     numberOfPlayers = input()
     for i in range(int(numberOfPlayers)):
-        addPlayer()  # Change to loop correctly based on the number of players
+        addPlayer()
 
 def addPlayer():
     print("\n**********ADD PLAYER {}**********".format(len(players)))
@@ -109,7 +109,7 @@ def printDictionary():
          print(f"{key}: {value}")
 
 def rollDice():
-    ludo_dictionary = {
+    dice_dictionary = {
         1: [
             "############",
             "#          #",
@@ -161,7 +161,7 @@ def rollDice():
             break
         else:
             roll = random.randint(5, 6)
-            for line in ludo_dictionary[roll]:
+            for line in dice_dictionary[roll]:
                 print(line)
             setPlayerPositions(roll)
             printDictionary()
@@ -204,61 +204,11 @@ def setPlayerPositions(roll):
         if len(availablePiece) == 1:
             removePlayerOldPosition(availablePiece[0])
             player_positions[availablePiece[0]] = list(getTuplePosition(player_positions[availablePiece[0]][:2], roll)) + [1]
-        else:
+        if len(availablePiece) > 1:
             print("Available to move: " + ', '.join(availablePiece))
             availableToMoveChoice = input("Select an available player to move: ")
             removePlayerOldPosition(availableToMoveChoice)
             player_positions[availableToMoveChoice] = list(getTuplePosition(player_positions[availableToMoveChoice][:2], roll)) + [1]
-
-
-
-
-            
-    # print("world")
-    # ######
-
-    # player_count = sum(1 for inSpawnPlayer in player_positions if inSpawnPlayer.startswith('B') and player_positions[inSpawnPlayer][2] == 1)
-    # available_players = []
-    
-    # for inSpawnPlayer in player_positions:
-    #     if inSpawnPlayer.startswith('B') and player_positions[inSpawnPlayer][2] == 1:
-    #         if player_count > 1:
-    #             available_players.append(inSpawnPlayer)
-    
-    # # Print available players on one line if there are more than one
-    # if available_players:
-    #     print("Available to move: " + ', '.join(available_players))
-    #     availableToMoveChoice = input("Select an available player to move: ")
-    #     removePlayerOldPosition(availableToMoveChoice)
-    #     player_positions[availableToMoveChoice] = list(getTuplePosition(player_positions[availableToMoveChoice][:2], roll)) + [1]
-    #     printDictionary()
-    # else:
-    #     for inSpawnPlayer in player_positions:
-    #         if inSpawnPlayer.startswith('B') and player_positions[inSpawnPlayer][2] == 1:
-    #             removePlayerOldPosition(inSpawnPlayer)
-    #             player_positions[inSpawnPlayer] = list(getTuplePosition(player_positions[inSpawnPlayer][:2], roll)) + [1]
-
-    # # Check if any 'B' players are out and roll is 6
-    # for inSpawnPlayer in player_positions:
-    #     if inSpawnPlayer.startswith('B') and player_positions[inSpawnPlayer][2] == 0 and roll == 6:
-    #         if player_count > 1:
-    #             print("Available to move: " + ', '.join(available_players))
-    #             availableToMoveChoice = input("Select an available player to move: ")
-    #             removePlayerOldPosition(availableToMoveChoice)
-    #             player_positions[availableToMoveChoice] = list(getTuplePosition(player_positions[availableToMoveChoice][:2], roll)) + [1]
-    #             printDictionary()
-    #             break
-    #         else:
-    #             #print(player_positions[inSpawnPlayer])
-    #             removePlayerOldPosition(inSpawnPlayer)
-    #             player_positions[inSpawnPlayer] = [0, 52, 1]
-    #             break
-
-
-
-    # if roll == 6 and player_positions["B1"][2] == 0:
-    #     removePlayerOldPosition("B1")
-    #     player_positions["B1"] = [0, 52, 1]
 
 def getTuplePosition(target_tuple, roll):
     currentPosition = coordinates.index(tuple(target_tuple))
@@ -269,32 +219,6 @@ def updateDictionary(playerID, playerPosition):
     indexPosition = playerPosition[1]
     original_value = board_dictionary[dictionaryIndex]
     board_dictionary[dictionaryIndex] = original_value[:max(0, indexPosition - 1)] + playerID + original_value[min(len(original_value), indexPosition + 1):]
-
-# def updateDictionary(playerID, playerPosition):
-#     # Get player's previous position (current position in the dictionary)
-#     previous_position = player_positions[playerID]
-
-#     # Clear the player's previous position
-#     dictionaryIndex = str(previous_position[0])  # Row of the old position
-#     indexPosition = previous_position[1]  # Column of the old position
-#     original_value = board_dictionary[dictionaryIndex]
-
-#     # Replace the old position with a space ' ' to "erase" the player
-#     board_dictionary[dictionaryIndex] = original_value[:indexPosition] + ' ' + original_value[indexPosition+1:]
-
-#     # Update player's new position
-#     dictionaryIndex = str(playerPosition[0])  # Row of the new position
-#     indexPosition = playerPosition[1]  # Column of the new position
-#     original_value = board_dictionary[dictionaryIndex]
-
-#     # Update the board with the player's new position
-#     board_dictionary[dictionaryIndex] = original_value[:indexPosition] + playerID + original_value[indexPosition+1:]
-    
-#     # Update the player's position in player_positions dictionary
-#     player_positions[playerID] = playerPosition
-
-#     # Print the updated positions to check
-#     print(f"Updated {playerID} position to: {playerPosition}")
 
 def main():
     try:
